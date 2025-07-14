@@ -10,13 +10,14 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    // ... [fillable, hidden, casts] tetap seperti sebelumnya
-
     protected $fillable = [
         'name',
         'email',
         'password',
         'role',
+        'alamat',
+        'no_telepon',
+        'foto_profil',
     ];
 
     protected $hidden = [
@@ -32,12 +33,21 @@ class User extends Authenticatable
         ];
     }
 
-    // 🟢 Tambahkan ini
+    // 🔽 Tempel method ini di bawah atau atas relasi-relasi seperti guru/siswa
+    public function getFotoProfilUrlAttribute()
+    {
+        if ($this->foto_profil) {
+            return asset('storage/' . $this->foto_profil);
+        }
+
+        // fallback avatar otomatis
+        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=0D8ABC&color=fff';
+    }
 
     public function getRoleTextAttribute()
-{
-    return ucfirst($this->role);
-}
+    {
+        return ucfirst($this->role);
+    }
 
     public function guru()
     {
@@ -50,9 +60,7 @@ class User extends Authenticatable
     }
 
     public function kelas()
-{
-    return $this->belongsToMany(Kelas::class, 'kelas_siswa', 'siswa_id', 'kelas_id')->withTimestamps();
-}
-
-
+    {
+        return $this->belongsToMany(Kelas::class, 'kelas_siswa', 'siswa_id', 'kelas_id')->withTimestamps();
+    }
 }

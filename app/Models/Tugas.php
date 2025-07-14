@@ -35,4 +35,10 @@ public function pengumpulan()
 {
     return $this->hasMany(\App\Models\PengumpulanTugas::class);
 }
+
+public function mataPelajaran()
+{
+    return $this->belongsTo(MataPelajaran::class);
+}
+
 }

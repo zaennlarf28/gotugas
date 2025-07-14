@@ -36,6 +36,7 @@ class TugasController extends Controller
 
         Tugas::create([
             'kelas_id' => $kelas->id,
+            'mata_pelajaran_id' => $request->mata_pelajaran_id,
             'judul' => $request->judul,
             'perintah' => $request->perintah,
             'deskripsi' => $request->deskripsi,
@@ -70,9 +71,16 @@ public function destroy($id)
 
     public function lihatPengumpulan($tugasId)
 {
-    $tugas = Tugas::with(['pengumpulan.siswa'])->findOrFail($tugasId);
+    $tugas = Tugas::with([
+        'pengumpulan' => function ($query) {
+            $query->orderBy('created_at', 'desc'); // asc urut paling awal di atas
+        },
+        'pengumpulan.siswa'
+    ])->findOrFail($tugasId);
+
     return view('guru.tugas.pengumpulan', compact('tugas'));
 }
+
 
 public function beriNilai(Request $request, $id)
 {

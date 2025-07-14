@@ -1,76 +1,58 @@
 @extends('layouts.backend')
+
 @section('content')
-<div class="container-fluid">
-          <!--  Owl carousel -->
-          <div class="owl-carousel counter-carousel owl-theme">
-            <div class="item">
-              <div class="card border-0 zoom-in bg-primary-subtle shadow-none">
-                <div class="card-body">
-                  <div class="text-center">
-                    <img src="{{asset('/assets/backend/images/svgs/icon-user-male.svg')}}" width="50" height="50" class="mb-3" alt="modernize-img" />
-                    <p class="fw-semibold fs-3 text-primary mb-1">
-                      Employees
-                    </p>
-                    <h5 class="fw-semibold text-primary mb-0">96</h5>
-                  </div>
+<div class="container-fluid mt-4">
+    {{-- Selamat Datang --}}
+    <div class="mb-4 p-4 rounded-4 bg-light border-start border-5 border-primary shadow-sm">
+        <h3 class="fw-bold mb-1">Selamat Datang, {{ Auth::user()->name }} 👋</h3>
+        <p class="mb-0 text-muted">Ini adalah dashboard admin. Kamu bisa mengelola data pengguna di sini.</p>
+    </div>
+
+    {{-- Statistik Kartu --}}
+    <div class="row g-4">
+
+        <!-- Total Akun -->
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 bg-light position-relative overflow-hidden">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <img src="{{ asset('/assets/backend/images/svgs/icon-user-male.svg') }}" width="50" height="50" alt="User Icon" />
+                    </div>
+                    <p class="fw-semibold fs-5 text-primary mb-0">Total Akun</p>
+                    <h4 class="fw-bold text-primary">{{ $jumlahUser }}</h4>
+                    <span class="position-absolute top-0 start-0 badge bg-primary text-white rounded-end-pill px-3 py-1 mt-2 ms-2">User</span>
                 </div>
-              </div>
             </div>
-            <div class="item">
-              <div class="card border-0 zoom-in bg-warning-subtle shadow-none">
-                <div class="card-body">
-                  <div class="text-center">
-                    <img src="{{asset('/assets/backend/images/svgs/icon-briefcase.svg')}}" width="50" height="50" class="mb-3" alt="modernize-img" />
-                    <p class="fw-semibold fs-3 text-warning mb-1">Clients</p>
-                    <h5 class="fw-semibold text-warning mb-0">3,650</h5>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="item">
-              <div class="card border-0 zoom-in bg-info-subtle shadow-none">
-                <div class="card-body">
-                  <div class="text-center">
-                    <img src="{{asset('/assets/backend/images/svgs/icon-mailbox.svg')}}" width="50" height="50" class="mb-3" alt="modernize-img" />
-                    <p class="fw-semibold fs-3 text-info mb-1">Projects</p>
-                    <h5 class="fw-semibold text-info mb-0">356</h5>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="item">
-              <div class="card border-0 zoom-in bg-danger-subtle shadow-none">
-                <div class="card-body">
-                  <div class="text-center">
-                    <img src="{{asset('/assets/backend/images/svgs/icon-favorites.svg')}}" width="50" height="50" class="mb-3" alt="modernize-img" />
-                    <p class="fw-semibold fs-3 text-danger mb-1">Events</p>
-                    <h5 class="fw-semibold text-danger mb-0">696</h5>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="item">
-              <div class="card border-0 zoom-in bg-success-subtle shadow-none">
-                <div class="card-body">
-                  <div class="text-center">
-                    <img src="{{asset('/assets/backend/images/svgs/icon-speech-bubble.svg')}}" width="50" height="50" class="mb-3" alt="modernize-img" />
-                    <p class="fw-semibold fs-3 text-success mb-1">Payroll</p>
-                    <h5 class="fw-semibold text-success mb-0">$96k</h5>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="item">
-              <div class="card border-0 zoom-in bg-info-subtle shadow-none">
-                <div class="card-body">
-                  <div class="text-center">
-                    <img src="{{asset('/assets/backend/images/svgs/icon-connect.svg')}}" width="50" height="50" class="mb-3" alt="modernize-img" />
-                    <p class="fw-semibold fs-3 text-info mb-1">Reports</p>
-                    <h5 class="fw-semibold text-info mb-0">59</h5>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
+
+        <!-- Jumlah Guru -->
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 bg-white position-relative overflow-hidden">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <img src="{{ asset('/assets/backend/images/svgs/icon-briefcase.svg') }}" width="50" height="50" alt="Guru Icon" />
+                    </div>
+                    <p class="fw-semibold fs-5 text-success mb-0">Guru</p>
+                    <h4 class="fw-bold text-success">{{ $jumlahGuru }}</h4>
+                    <span class="position-absolute top-0 start-0 badge bg-success text-white rounded-end-pill px-3 py-1 mt-2 ms-2">Guru</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Jumlah Siswa -->
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 bg-white position-relative overflow-hidden">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png" width="50" height="50" alt="Siswa Icon" />
+                    </div>
+                    <p class="fw-semibold fs-5 text-info mb-0">Siswa</p>
+                    <h4 class="fw-bold text-info">{{ $jumlahSiswa }}</h4>
+                    <span class="position-absolute top-0 start-0 badge bg-info text-white rounded-end-pill px-3 py-1 mt-2 ms-2">Siswa</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
 @endsection

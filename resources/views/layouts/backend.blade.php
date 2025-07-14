@@ -13,7 +13,7 @@
   <!-- Core Css -->
   <link rel="stylesheet" href="{{asset('/assets/backend/css/styles.css')}}" />
 
-  <title>Modernize Bootstrap Admin</title>
+  <title>GoTugas - Admin</title>
   <!-- Owl Carousel  -->
   <link rel="stylesheet" href="{{asset('/assets/backend/libs/owl.carousel/dist/assets/owl.carousel.min.css')}}" />
   <!-- menambah wadah style dan akan di panggil ketika dibutuhkan -->

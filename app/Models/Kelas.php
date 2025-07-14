@@ -14,7 +14,7 @@ class Kelas extends Model
     protected $fillable = [
         'nama_kelas',
         'kode_kelas',
-        'mata_pelajaran',
+        'mata_pelajaran_id',
         'guru_id',
     ];
 
@@ -40,6 +40,12 @@ class Kelas extends Model
 {
     return $this->hasMany(PermintaanJoin::class);
 }
+
+public function mataPelajaran()
+{
+    return $this->belongsTo(MataPelajaran::class, 'mata_pelajaran_id');
+}
+
 
 
     

@@ -44,14 +44,13 @@
                 <!-- Dashboard -->
                 <!-- ---------------------------------- -->
                 <li class="sidebar-item">
-    <a class="sidebar-link" href="{{ route('backend.users.index')}}" aria-expanded="false">
-        <span>
-            <i class="ti ti-user"></i>
-        </span>
-        <span class="hide-menu">User</span> 
-    </a>
-</li>
-
+                    <a class="sidebar-link" href="{{ route('backend.users.index')}}" aria-expanded="false">
+                        <span>
+                        <i class="ti ti-user"></i>
+                        </span>
+                        <span class="hide-menu">User</span> 
+                    </a>
+                </li>
             </ul>
         </nav>
 

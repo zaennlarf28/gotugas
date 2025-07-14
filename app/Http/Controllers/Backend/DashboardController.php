@@ -7,12 +7,15 @@ use App\Models\User;
 
 class DashboardController extends Controller
 {
-    public function index()
-    {
-        $userCount  = User::count();
-        $guruCount  = User::whereIn('isAdmin', [2, 3, 4])->count();
-        $siswaCount = User::where('isAdmin', 0)->count();
 
-        return view('backend.dashboard.index', compact('userCount', 'guruCount', 'siswaCount'));
-    }
+public function index()
+{
+    $jumlahUser = User::count();
+    $jumlahGuru = User::where('role', 'guru')->count();
+    $jumlahSiswa = User::where('role', 'siswa')->count();
+
+    return view('backend.index', compact('jumlahUser', 'jumlahGuru', 'jumlahSiswa'));
+}
+
+
 }

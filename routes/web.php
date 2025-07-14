@@ -8,6 +8,7 @@ use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Guru\TugasController;
+use App\Http\Controllers\Guru\MataPelajaranController;
 use App\Http\Controllers\Siswa\TugasController as SiswaTugasController;
 use App\Http\Middleware\Admin;
 use App\Http\Middleware\Guru;
@@ -52,6 +53,7 @@ Route::group(['prefix'=>'guru', 'as' => 'guru.', 'middleware'=>['auth', Guru::cl
     // Kelas
     Route::resource('kelas', \App\Http\Controllers\Guru\KelasController::class);
     Route::resource('tugas', \App\Http\Controllers\Guru\TugasController::class);
+    Route::resource('mapel', MataPelajaranController::class);
     // Tugas
     Route::get('kelas/{kelas}/tugas/create', [\App\Http\Controllers\Guru\TugasController::class, 'create'])->name('tugas.create');
     Route::post('kelas/{kelas}/tugas', [\App\Http\Controllers\Guru\TugasController::class, 'store'])->name('tugas.store');
@@ -87,6 +89,9 @@ Route::middleware([
     Route::get('/kelas/join', [SiswaKelasController::class, 'showFormJoin'])->name('kelas.join');
     Route::post('/kelas/join', [SiswaKelasController::class, 'prosesJoin'])->name('kelas.join.proses');
     Route::get('/kelas/{id}', [SiswaKelasController::class, 'show'])->name('kelas.show');
+     Route::delete('/kelas/{kelas}/keluar', [SiswaKelasController::class, 'keluar'])->name('kelas.keluar');
+
+
 
       // ✅ Route untuk lihat dan kumpulkan tugas
     Route::get('/tugas/{id}', [SiswaTugasController::class, 'show'])->name('tugas.show');
@@ -95,5 +100,12 @@ Route::post('/tugas/{id}/kumpul', [\App\Http\Controllers\Siswa\TugasController::
 
 });
 
+use App\Http\Controllers\ProfilController;
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profil', [ProfilController::class, 'show'])->name('profil');
+    Route::get('/profil/edit', [ProfilController::class, 'edit'])->name('profil.edit');
+    Route::post('/profil/update', [ProfilController::class, 'update'])->name('profil.update');
+});
 
 

@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Index - eNno Bootstrap Template</title>
+  <title>GoTugas - Frontend/Siswa</title>
   <meta name="description" content="">
   <meta name="keywords" content="">
 
@@ -47,7 +47,7 @@
 </main>
 
 <!--  Footer Start -->
-@include('layouts.components-frontend.footer')
+<!-- @include('layouts.components-frontend.footer') -->
 <!--  Footer End -->
 
 <!-- Vendor JS Files -->

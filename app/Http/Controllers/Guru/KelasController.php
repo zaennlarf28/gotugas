@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Kelas;
+use App\Models\MataPelajaran;
 use Illuminate\Support\Facades\Auth;
 
 class KelasController extends Controller
@@ -16,42 +17,45 @@ class KelasController extends Controller
     return view('guru.kelas.index', compact('kelas'));
 }
 
-    public function create()
-    {
-        return view('guru.kelas.create');
-    }
+   public function create()
+{
+    $mapel = MataPelajaran::all(); // Ambil semua mata pelajaran
+    return view('guru.kelas.create', compact('mapel'));
+}
 
     public function store(Request $request)
 {
     $request->validate([
         'nama_kelas' => 'required',
-        'mata_pelajaran' => 'required',
+        'mata_pelajaran_id' => 'required|exists:mata_pelajaran,id',
     ]);
 
     $kode_kelas = strtoupper(Str::random(6)); // Contoh: 'XZP8LQ'
 
     Kelas::create([
         'nama_kelas' => $request->nama_kelas,
-        'mata_pelajaran' => $request->mata_pelajaran,
+        'mata_pelajaran_id' => $request->mata_pelajaran_id,
         'kode_kelas' => $kode_kelas,
         'guru_id' => Auth::id()
     ]);
-
+    
     return redirect()->route('guru.kelas.index')
         ->with('success', 'Kelas berhasil dibuat.')
         ->with('kode_kelas', $kode_kelas);
 }
-    public function edit($id)
+    
+public function edit($id)
 {
     $kelas = Kelas::findOrFail($id);
 
-    // Cek hak akses guru
     if ($kelas->guru_id !== Auth::id()) {
-        abort(403, 'Anda tidak diizinkan mengedit kelas ini.');
+        abort(403);
     }
 
-    return view('guru.kelas.edit', compact('kelas'));
+    $mapel = MataPelajaran::all(); // Ambil semua mapel juga di sini
+    return view('guru.kelas.edit', compact('kelas', 'mapel'));
 }
+
 
 public function update(Request $request, $id)
 {

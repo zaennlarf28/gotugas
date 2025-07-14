@@ -1,8 +1,7 @@
-<header id="header" class="header d-flex align-items-center sticky-top">
+<header id="header" class="header d-flex align-items-center sticky-top shadow-sm">
   <div class="container-fluid container-xl position-relative d-flex align-items-center">
 
     <a href="{{ url('/') }}" class="logo d-flex align-items-center me-auto">
-      <!-- <img src="{{ asset('assets/frontend/img/logo.png') }}" alt=""> -->
       <h1 class="sitename">GoTugas</h1>
     </a>
 
@@ -15,29 +14,32 @@
     </nav>
 
     {{-- Login/Register/User --}}
-@if (Route::has('login'))
-  <div class="d-flex align-items-center gap-3">
-    @auth
+    @if (Route::has('login'))
+    <div class="d-flex align-items-center gap-3">
+      @auth
       <div class="dropdown">
-        <a class="btn btn-outline-dark btn-sm dropdown-toggle" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-          {{ Auth::user()->name }}
+        <a class="d-flex align-items-center text-decoration-none dropdown-toggle" href="#" id="userDropdown"
+          data-bs-toggle="dropdown" aria-expanded="false">
+          <img src="{{ Auth::user()->foto_profil_url }}"
+     alt="Avatar" class="rounded-circle me-2" width="30" height="30">
+          <span class="fw-semibold">{{ Auth::user()->name }}</span>
         </a>
-        
-        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+        <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
+          <li><a class="dropdown-item" href="{{ route('profil') }}">Profil Saya</a></li>
+          
           <li>
             <form method="POST" action="{{ route('logout') }}">
               @csrf
-              <button type="submit" class="dropdown-item">Logout</button>
+              <button type="submit" class="dropdown-item text-danger">Logout</button>
             </form>
           </li>
         </ul>
       </div>
-    @else
+      @else
       <a href="{{ route('login') }}" class="btn btn-outline-success btn-sm">Log in</a>
-    @endauth
-  </div>
-@endif
-
+      @endauth
+    </div>
+    @endif
 
   </div>
 </header>

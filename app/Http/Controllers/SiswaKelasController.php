@@ -48,4 +48,20 @@ class SiswaKelasController extends Controller
     return view('siswa.kelas_detail', compact('kelas', 'tugas'));
 }
 
+public function keluar($id)
+{
+    $user = auth()->user();
+
+    // Cek apakah user memang tergabung
+    if (!$user->kelas->contains($id)) {
+        return redirect()->route('siswa.index')->with('error', 'Kamu tidak tergabung di kelas ini.');
+    }
+
+    // Hapus relasi
+    $user->kelas()->detach($id);
+
+    return redirect()->route('siswa.index')->with('success', 'Berhasil keluar dari kelas.');
+}
+
+
 }
