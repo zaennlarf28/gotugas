@@ -30,7 +30,7 @@ class TugasController extends Controller
             'judul' => 'required',
             'perintah' => 'required',
             'deskripsi' => 'required',
-            'deadline' => 'required|date',
+            'deadline' => 'required|date|after_or_equal:today',
             'tipe' => 'required|in:individu,kelompok',
         ]);
 

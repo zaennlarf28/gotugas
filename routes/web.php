@@ -84,19 +84,23 @@ Route::middleware([
     'auth',
     Siswa::class // ✅ pakai `::class` karena Laravel 11/12
 ])->prefix('siswa')->name('siswa.')->group(function () {
-     Route::get('/', [SiswaKelasController::class, 'index'])->name('index');
+         // Halaman dashboard siswa
+    Route::get('/', [SiswaKelasController::class, 'index'])->name('index');
 
+    // Join kelas
     Route::get('/kelas/join', [SiswaKelasController::class, 'showFormJoin'])->name('kelas.join');
     Route::post('/kelas/join', [SiswaKelasController::class, 'prosesJoin'])->name('kelas.join.proses');
     Route::get('/kelas/{id}', [SiswaKelasController::class, 'show'])->name('kelas.show');
-     Route::delete('/kelas/{kelas}/keluar', [SiswaKelasController::class, 'keluar'])->name('kelas.keluar');
+    Route::delete('/kelas/{kelas}/keluar', [SiswaKelasController::class, 'keluar'])->name('kelas.keluar');
 
-
-
-      // ✅ Route untuk lihat dan kumpulkan tugas
+    // ✅ Tugas: lihat detail & kumpulkan
     Route::get('/tugas/{id}', [SiswaTugasController::class, 'show'])->name('tugas.show');
-Route::post('/tugas/{id}/kumpulkan', [SiswaTugasController::class, 'kumpulkan'])->name('tugas.kumpulkan');
-Route::post('/tugas/{id}/kumpul', [\App\Http\Controllers\Siswa\TugasController::class, 'kumpulkan'])->name('tugas.kumpul');
+    Route::post('/tugas/{id}/kumpulkan', [SiswaTugasController::class, 'kumpulkan'])->name('tugas.kumpulkan');
+
+    // ✅ Tugas: edit & batalkan pengumpulan
+    Route::get('/tugas/edit/{id}', [SiswaTugasController::class, 'editPengumpulan'])->name('tugas.edit');
+    Route::post('/tugas/update/{id}', [SiswaTugasController::class, 'updatePengumpulan'])->name('tugas.update');
+    Route::delete('/tugas/batalkan/{id}', [SiswaTugasController::class, 'destroyPengumpulan'])->name('tugas.batalkan');
 
 });
 
