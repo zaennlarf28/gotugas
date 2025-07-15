@@ -18,7 +18,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="mata_pelajaran" class="form-label fw-semibold">Mata Pelajaran</label>
+                    <label for="mata_pelajaran_id" class="form-label fw-semibold">Mata Pelajaran</label>
                     <select name="mata_pelajaran_id" class="form-select rounded" required>
                         <option value="">-- Pilih --</option>
                         @foreach ($mapel as $m)

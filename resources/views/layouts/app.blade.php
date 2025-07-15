@@ -1,25 +1,21 @@
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="light">
-
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>GoTugas - Login</title>
+
   <link rel="shortcut icon" href="{{ asset('assets/backend/images/logos/favicon.png') }}" />
   <link rel="stylesheet" href="{{ asset('assets/backend/css/styles.css') }}" />
-
-  <!-- Iconify & tsParticles -->
-  <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
 
   <style>
     body {
-      background: #f1f8e9;
+      background: #f5f5f5ff;
       font-family: 'Segoe UI', sans-serif;
       position: relative;
       overflow: hidden;
+      color: #212121;
     }
 
     #particles-bg {
@@ -30,30 +26,25 @@
     }
 
     .card {
-      border: none;
+      border: 1px solid #e0e0e0;
       border-radius: 1rem;
-      background: #fff;
+      background: #ffffff;
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
     }
 
     .form-control {
-      border-radius: 0.75rem;
+      border-radius: 0.5rem;
     }
 
-    .btn-success {
-      border-radius: 999px;
-      background-color: #4caf50;
+    .btn-login {
+      border-radius: 0.5rem;
+      background-color: #4CAF50;
       border: none;
+      color: #fff;
     }
 
-    .btn-success:hover {
+    .btn-login:hover {
       background-color: #43a047;
-    }
-
-    .iconify {
-      background-color: #e8f5e9;
-      padding: 12px;
-      border-radius: 50%;
     }
 
     label {
@@ -65,8 +56,20 @@
       color: #616161;
     }
 
+    .alert-success {
+      background-color: #e8f5e9;
+      color: #388e3c;
+      border: none;
+    }
+
     .text-muted small {
       font-size: 0.85rem;
+    }
+
+    .logo-image {
+      width: 130px;
+      height: auto;
+      border-radius: 12px;
     }
 
     .text-success {
@@ -84,11 +87,11 @@
       <div class="card p-4">
         <div class="card-body">
 
-          <!-- Header -->
+          <!-- Header dengan Logo -->
           <div class="text-center mb-4">
-            <iconify-icon icon="mdi:book-open-page-variant" width="48" height="48" class="iconify text-success"></iconify-icon>
-            <h4 class="fw-bold mt-2 text-success mb-1">GoTugas</h4>
-            <small class="text-muted">Selamat datang kembali</small>
+            <img src="{{ asset('storage/ikon-buku.jpg') }}" alt="Ikon Buku" class="logo-image mb-3">
+            <h3 class="fw-bold mt-2 text-dark mb-1">GoTugas</h3>
+            <small class="text-muted">Silakan login untuk melanjutkan</small>
           </div>
 
           @if(session('status'))
@@ -120,14 +123,17 @@
             </div>
 
             <div class="d-grid mb-3">
-              <button type="submit" class="btn btn-success fw-semibold">Login</button>
+              <button type="submit" class="btn btn-login fw-semibold">Login</button>
             </div>
 
-            <!-- <div class="text-center">
+            <!-- Uncomment kalau mau fitur lupa password -->
+            <!--
+            <div class="text-center">
               <a href="{{ route('password.request') }}" class="text-decoration-none text-secondary small">
                 Lupa password?
               </a>
-            </div> -->
+            </div>
+            -->
           </form>
 
         </div>
@@ -147,7 +153,7 @@
   <script>
     tsParticles.load("particles-bg", {
       fullScreen: false,
-      background: { color: "#f1f8e9" },
+      background: { color: "#f5f5f5" },
       particles: {
         number: { value: 40 },
         color: { value: "#81c784" },

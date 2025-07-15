@@ -40,6 +40,14 @@
 
 @section('content')
 <div class="container-fluid mt-4">
+
+    {{-- Tombol Kembali --}}
+    <div class="mb-3">
+        <a href="{{ route('guru.tugas.index') }}" class="btn btn-outline-secondary btn-sm rounded-pill">
+            <i class="bi bi-arrow-left me-1"></i>Kembali
+        </a>
+    </div>
+
     <h4 class="fw-bold mb-3">📥 Pengumpulan Tugas: {{ $tugas->judul }}</h4>
 
     @if ($tugas->pengumpulan->isEmpty())
