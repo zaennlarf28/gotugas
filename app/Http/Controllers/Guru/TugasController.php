@@ -71,12 +71,11 @@ public function destroy($id)
 
     public function lihatPengumpulan($tugasId)
 {
-    $tugas = Tugas::with([
-        'pengumpulan' => function ($query) {
-            $query->orderBy('created_at', 'desc'); // asc urut paling awal di atas
-        },
-        'pengumpulan.siswa'
-    ])->findOrFail($tugasId);
+    $tugas = Tugas::with(['pengumpulan' => function ($query)
+     {
+        $query->orderBy('created_at', 'desc'); // asc urut paling awal di atas
+     }, 'pengumpulan.siswa'
+     ])->findOrFail($tugasId);
 
     return view('guru.tugas.pengumpulan', compact('tugas'));
 }

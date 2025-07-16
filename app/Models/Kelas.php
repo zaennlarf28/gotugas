@@ -34,7 +34,7 @@ class Kelas extends Model
     public function tugas()
     {
         return $this->hasMany(Tugas::class);
-    }
+    } 
 
     public function permintaanJoin()
 {

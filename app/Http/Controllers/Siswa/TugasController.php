@@ -19,6 +19,7 @@ class TugasController extends Controller
 
     public function kumpulkan(Request $request, $id)
     {
+        $tugas = Tugas::findOrFail($id);
         if (now()->gt($tugas->deadline)) {
         return back()->with('error', 'Deadline sudah lewat. Tidak bisa mengumpulkan tugas.');
     }

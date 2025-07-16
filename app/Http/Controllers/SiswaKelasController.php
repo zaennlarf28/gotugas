@@ -43,7 +43,8 @@ class SiswaKelasController extends Controller
     public function show($id)
 {
     $kelas = Auth::user()->kelas()->where('kelas.id', $id)->firstOrFail();
-    $tugas = $kelas->tugas; // relasi tugas dari model Kelas
+    $tugas = $kelas->tugas()->orderBy('created_at', 'desc')->get(); 
+    //order by untuk urutin data sesuai waktu asc, desc, relasi tugas dari model Kelas
 
     return view('siswa.kelas_detail', compact('kelas', 'tugas'));
 }
