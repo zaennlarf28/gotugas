@@ -50,7 +50,7 @@
             </div>
             <a href="{{ route('siswa.kelas.show', $kelas->id) }}" class="stretched-link">
               <h3>{{ $kelas->nama_kelas }}</h3>
-              <h5>{{ $kelas->mataPelajaran->mata_pelajaran }}</h5>
+              <h5>  {{ $kelas->mapel->nama_mapel ?? '-' }}</h5>
               <p class="text-muted mb-0">Dibuat oleh: {{ $kelas->guru->name }}</p>
             </a>
             <p>Bergabung sejak {{ $kelas->pivot->created_at->format('d M Y') }}</p>

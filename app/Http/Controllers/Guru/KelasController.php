@@ -2,104 +2,94 @@
 
 namespace App\Http\Controllers\Guru;
 
-use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Kelas;
-use App\Models\MataPelajaran;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class KelasController extends Controller
 {
     public function index()
     {
-        $kelas = Kelas::with('guru', 'tugas')->where('guru_id', Auth::id())->get();
+        $kelas = Kelas::with('mapel')
+            ->where('guru_id', Auth::id())
+            ->latest()
+            ->get(); // ⛔ JANGAN paginate
+            
         return view('guru.kelas.index', compact('kelas'));
     }
 
     public function create()
     {
-        $mapel = MataPelajaran::all(); // Ambil semua mata pelajaran
-        return view('guru.kelas.create', compact('mapel'));
+        $mapels = Auth::user()->mapels; // relasi
+        return view('guru.kelas.create', compact('mapels'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'nama_kelas' => 'required',
-            'mata_pelajaran_id' => 'required|exists:mata_pelajaran,id',
+            'mapel_id'   => 'required|exists:mapels,id',
         ]);
 
-        $kode_kelas = strtoupper(Str::random(6)); // Contoh: 'XZP8LQ'
+        do {
+            $kode = strtoupper(Str::random(6));
+        } while (Kelas::where('kode_kelas', $kode)->exists());
 
         Kelas::create([
             'nama_kelas' => $request->nama_kelas,
-            'mata_pelajaran_id' => $request->mata_pelajaran_id,
-            'kode_kelas' => $kode_kelas,
-            'guru_id' => Auth::id()
+            'mapel_id'   => $request->mapel_id,
+            'kode_kelas' => $kode,
+            'guru_id'    => Auth::id(),
         ]);
-        
-        return redirect()->route('guru.kelas.index')
-            ->with('success', 'Kelas berhasil dibuat.')
-            ->with('kode_kelas', $kode_kelas);
+
+        return redirect()
+            ->route('guru.kelas.index')
+            ->with('success', 'Kelas berhasil dibuat')
+            ->with('kode_kelas', $kode);
     }
 
-    public function edit($id)
+    public function edit(Kelas $kelas)
     {
-        $kelas = Kelas::findOrFail($id);
+        $this->authorizeGuru($kelas);
 
-        // Cek apakah guru yang login adalah pemilik kelas
-        if ($kelas->guru_id !== Auth::id()) {
-            abort(403, 'Anda tidak diizinkan mengedit kelas ini.');
-        }
-
-        $mapel = MataPelajaran::all(); // Ambil semua mapel untuk dropdown
-
-        return view('guru.kelas.edit', compact('kelas', 'mapel'));
+        $mapels = Auth::user()->mapels;
+        return view('guru.kelas.edit', compact('kelas', 'mapels'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Kelas $kelas)
     {
-        $kelas = Kelas::findOrFail($id);
-
-        // Cek apakah guru yang login adalah pemilik kelas
-        if ($kelas->guru_id !== Auth::id()) {
-            abort(403, 'Anda tidak diizinkan mengubah kelas ini.');
-        }
+        $this->authorizeGuru($kelas);
 
         $request->validate([
             'nama_kelas' => 'required',
-            'mata_pelajaran_id' => 'required|exists:mata_pelajaran,id'
+            'mapel_id'   => 'required|exists:mapels,id',
         ]);
 
         $kelas->update([
             'nama_kelas' => $request->nama_kelas,
-            'mata_pelajaran_id' => $request->mata_pelajaran_id,
+            'mapel_id'   => $request->mapel_id,
         ]);
 
-        return redirect()->route('guru.kelas.index')->with('success', 'Kelas berhasil diupdate.');
+        return redirect()
+            ->route('guru.kelas.index')
+            ->with('success', 'Kelas berhasil diperbarui');
+            
     }
 
-    public function destroy($id)
+    public function destroy(Kelas $kelas)
     {
-        $kelas = Kelas::findOrFail($id);
-
-        // (Opsional) Cek apakah yang menghapus adalah pembuat kelas
-        if ($kelas->guru_id !== Auth::id()) {
-            abort(403, 'Anda tidak diizinkan menghapus kelas ini.');
-        }
-
+        $this->authorizeGuru($kelas);
         $kelas->delete();
 
-        return redirect()->route('guru.kelas.index')->with('success', 'Kelas berhasil dihapus.');
+        return back()->with('success', 'Kelas berhasil dihapus');
     }
 
-    public function lihatPermintaan()
+    private function authorizeGuru(Kelas $kelas)
     {
-        $kelasSaya = Kelas::where('guru_id', Auth::id())
-            ->with('permintaanJoin.siswa')
-            ->get();
-
-        return view('guru.permintaan_join', compact('kelasSaya'));
+        if ($kelas->guru_id !== Auth::id()) {
+            abort(403);
+        }
     }
 }

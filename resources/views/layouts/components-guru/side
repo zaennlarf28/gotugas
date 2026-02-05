@@ -23,7 +23,7 @@
 </div>
 
 
-        <nav class="sidebar-nav scroll-sidebar mt-2" data-simplebar>
+        <nav class="sidebar-nav scroll-sidebar" data-simplebar>
             <ul id="sidebarnav">
 
                 <!-- HOME -->

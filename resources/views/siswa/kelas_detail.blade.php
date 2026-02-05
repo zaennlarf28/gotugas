@@ -15,7 +15,7 @@
         <div class="text-muted">
             <span class="me-3">
                 <i class="bi bi-book me-1 text-primary"></i>
-                {{ $kelas->mataPelajaran->mata_pelajaran }}
+                {{ $kelas->mapel->mapel_id }}
             </span>
             <span>
                 <i class="bi bi-clipboard-check me-1 text-success"></i>

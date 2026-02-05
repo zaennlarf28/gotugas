@@ -12,20 +12,16 @@ return new class extends Migration
     public function up()
 {
     Schema::create('pengumpulan_tugas', function (Blueprint $table) {
-        $table->id();
-        $table->unsignedBigInteger('tugas_id');
-        $table->unsignedBigInteger('siswa_id')->nullable(); // untuk tugas individu
-        $table->unsignedBigInteger('kelompok_id')->nullable(); // untuk tugas kelompok
-        $table->string('file');
-        $table->text('catatan')->nullable();
-        $table->enum('status', ['dikirim', 'dinilai', 'revisi'])->default('dikirim');
-        $table->integer('nilai')->nullable();
-        $table->timestamps();
+    $table->id();
+    $table->foreignId('tugas_id')->constrained('tugas')->cascadeOnDelete();
+    $table->foreignId('siswa_id')->constrained('users')->cascadeOnDelete();
+    $table->string('file');
+    $table->text('catatan')->nullable();
+    $table->enum('status', ['dikirim', 'dinilai', 'revisi'])->default('dikirim');
+    $table->integer('nilai')->nullable();
+    $table->timestamps();
+});
 
-        $table->foreign('tugas_id')->references('id')->on('tugas')->onDelete('cascade');
-        $table->foreign('siswa_id')->references('id')->on('users')->onDelete('cascade');
-        $table->foreign('kelompok_id')->references('id')->on('kelompok')->onDelete('cascade');
-    });
 }
 
     /**

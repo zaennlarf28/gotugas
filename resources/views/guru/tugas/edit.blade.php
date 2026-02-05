@@ -33,15 +33,6 @@
                     <input type="datetime-local" name="deadline" class="form-control" value="{{ old('deadline', isset($tugas) ? date('Y-m-d\TH:i', strtotime($tugas->deadline)) : '') }}" required>
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Tipe</label>
-                    <select name="tipe" class="form-select" required>
-                        <option value="">-- Pilih --</option>
-                        <option value="individu" {{ (old('tipe', $tugas->tipe ?? '') == 'individu') ? 'selected' : '' }}>Individu</option>
-                        <option value="kelompok" {{ (old('tipe', $tugas->tipe ?? '') == 'kelompok') ? 'selected' : '' }}>Kelompok</option>
-                    </select>
-                </div>
-
                 <div class="d-flex justify-content-end">
                     <a href="{{ route('guru.tugas.index') }}" class="btn btn-secondary me-2">Batal</a>
                     <button type="submit" class="btn {{ isset($tugas) ? 'btn-warning' : 'btn-success' }}">

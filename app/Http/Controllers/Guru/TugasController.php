@@ -25,27 +25,26 @@ class TugasController extends Controller
 
     // Simpan tugas baru
     public function store(Request $request, Kelas $kelas)
-    {
-        $request->validate([
-            'judul' => 'required',
-            'perintah' => 'required',
-            'deskripsi' => 'required',
-            'deadline' => 'required|date|after_or_equal:today',
-            'tipe' => 'required|in:individu,kelompok',
-        ]);
+{
+    $request->validate([
+        'judul' => 'required',
+        'perintah' => 'required',
+        'deskripsi' => 'required',
+        'deadline' => 'required|date|after_or_equal:today',
+    ]);
 
-        Tugas::create([
-            'kelas_id' => $kelas->id,
-            'mata_pelajaran_id' => $request->mata_pelajaran_id,
-            'judul' => $request->judul,
-            'perintah' => $request->perintah,
-            'deskripsi' => $request->deskripsi,
-            'deadline' => $request->deadline,
-            'tipe' => $request->tipe,
-        ]);
+    Tugas::create([
+        'kelas_id' => $kelas->id,
+        'mapel_id' => $request->mapel_id ?? null,
+        'judul' => $request->judul,
+        'perintah' => $request->perintah,
+        'deskripsi' => $request->deskripsi,
+        'deadline' => $request->deadline,
+    ]);
 
-        return redirect()->route('guru.kelas.index')->with('success', 'Tugas berhasil ditambahkan.');
-    }
+    return redirect()->route('guru.tugas.index')
+        ->with('success', 'Tugas berhasil ditambahkan.');
+}
 
     // Tampilkan form edit tugas
     public function edit($id)

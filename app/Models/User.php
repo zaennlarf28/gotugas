@@ -49,18 +49,31 @@ class User extends Authenticatable
         return ucfirst($this->role);
     }
 
-    public function guru()
+    // kelas (guru & siswa)
+    public function classes()
     {
-        return $this->hasOne(Guru::class);
+        return $this->belongsToMany(
+            Classes::class,
+            'class_user',
+            'user_id',
+            'class_id'
+        )->withTimestamps();
     }
 
-    public function siswa()
+    // mapel (khusus guru)
+    public function mapels()
     {
-        return $this->hasOne(Siswa::class);
+        return $this->belongsToMany(
+            Mapel::class,
+            'mapel_user',
+            'user_id',
+            'mapel_id'
+        )->withTimestamps();
     }
 
     public function kelas()
     {
         return $this->belongsToMany(Kelas::class, 'kelas_siswa', 'siswa_id', 'kelas_id')->withTimestamps();
     }
+
 }
