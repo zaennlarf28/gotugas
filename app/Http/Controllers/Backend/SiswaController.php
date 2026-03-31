@@ -18,8 +18,6 @@ class SiswaController extends Controller
             ->latest()
             ->get();
 
-        confirmDelete('Hapus Data!', 'Apakah Anda yakin ingin menghapus siswa ini?');
-
         return view('backend.siswa.index', compact('siswa'));
     }
 

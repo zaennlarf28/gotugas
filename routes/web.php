@@ -16,6 +16,7 @@ use App\Http\Controllers\Guru\CobaController;
 use App\Http\Controllers\Guru\TugasController;
 
 use App\Http\Controllers\Siswa\TugasController as SiswaTugasController;
+use App\Http\Controllers\Siswa\ChatController;
 use App\Http\Controllers\SiswaKelasController;
 
 use App\Http\Middleware\Admin;
@@ -92,6 +93,16 @@ Route::middleware(['auth', Siswa::class])->prefix('siswa')->name('siswa.')->grou
     Route::get('/tugas/edit/{id}', [SiswaTugasController::class, 'editPengumpulan'])->name('tugas.edit');
     Route::post('/tugas/update/{id}', [SiswaTugasController::class, 'updatePengumpulan'])->name('tugas.update');
     Route::delete('/tugas/batalkan/{id}', [SiswaTugasController::class, 'destroyPengumpulan'])->name('tugas.batalkan');
+
+    // Chat Kelas
+Route::get('/chat/kelas/{kelasId}', [ChatController::class, 'kelasIndex'])->name('chat.kelas');
+Route::post('/chat/kelas/{kelasId}', [ChatController::class, 'kelasSend'])->name('chat.kelas.send');
+Route::get('/chat/kelas/{kelasId}/poll', [ChatController::class, 'pollKelas'])->name('chat.kelas.poll');
+
+// Chat DM
+Route::get('/chat/dm/{userId}', [ChatController::class, 'dmIndex'])->name('chat.dm');
+Route::post('/chat/dm/{userId}', [ChatController::class, 'dmSend'])->name('chat.dm.send');
+Route::get('/chat/dm/{userId}/poll', [ChatController::class, 'pollDm'])->name('chat.dm.poll');
 
 });
 

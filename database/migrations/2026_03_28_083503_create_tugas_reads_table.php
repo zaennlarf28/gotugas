@@ -11,16 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('kelas', function (Blueprint $table) {
+        Schema::create('tugas_reads', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_kelas');
-            $table->string('kode_kelas')->unique();
-
-            $table->foreignId('guru_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('mapel_id')->constrained('mapels')->restrictOnDelete();
+            $table->foreignId('tugas_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('siswa_id')->constrained('users')->cascadeOnDelete();
+            $table->timestamp('read_at')->nullable();
             $table->timestamps();
-        });
 
+            $table->unique(['tugas_id', 'siswa_id']);
+        });
     }
 
     /**
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('kelas');
+        Schema::dropIfExists('tugas_reads');
     }
 };

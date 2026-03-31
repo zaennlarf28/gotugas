@@ -36,14 +36,14 @@ class SiswaKelasController extends Controller
 
     public function index()
     {
-        $kelasSaya = Auth::user()->kelas()->withPivot('created_at')->get();
+        $kelasSaya = Auth::user()->kelas()->with(['mapel', 'guru', 'tugas.reads'])->withPivot('created_at')->get();
         return view('index', compact('kelasSaya'));
     }
     
     public function show($id)
 {
     $kelas = Auth::user()->kelas()->where('kelas.id', $id)->firstOrFail();
-    $tugas = $kelas->tugas()->orderBy('created_at', 'desc')->get(); 
+    $tugas = $kelas->tugas()->with('reads')->orderBy('created_at', 'desc')->get(); 
     //order by untuk urutin data sesuai waktu asc, desc, relasi tugas dari model Kelas
 
     return view('siswa.kelas_detail', compact('kelas', 'tugas'));

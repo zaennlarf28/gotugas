@@ -12,6 +12,12 @@
 
     <div class="mb-4 text-center">
         <h3 class="fw-bold">{{ $kelas->nama_kelas }}</h3>
+        <div class="text-center mb-3">
+    <a href="{{ route('siswa.chat.kelas', $kelas->id) }}"
+       class="btn btn-outline-primary btn-sm rounded-pill">
+        <i class="bi bi-chat-dots me-1"></i> Diskusi Kelas
+    </a>
+</div>
         <div class="text-muted">
             <span class="me-3">
                 <i class="bi bi-book me-1 text-primary"></i>
@@ -24,25 +30,46 @@
         </div>
     </div>
 
+    {{-- Hitung tugas yang belum dibaca --}}
     @php
         $backgroundColors = [
-            '#f1f8e9', // hijau pucat
-            '#e3f2fd', // biru langit
-            '#fff3bf', // kuning pastel
-            '#f8f9fa', // abu muda
-            '#ede7f6', // ungu muda
+            '#f1f8e9',
+            '#e3f2fd',
+            '#fff3bf',
+            '#f8f9fa',
+            '#ede7f6',
         ];
+        $tugasBaru = $tugas->filter(fn($t) => !$t->isReadBy(Auth::id()));
     @endphp
+
+    {{-- Banner notifikasi tugas baru --}}
+    @if($tugasBaru->isNotEmpty())
+        <div class="alert alert-warning d-flex align-items-center gap-3 rounded-3 mb-4 shadow-sm" role="alert">
+            <i class="bi bi-bell-fill fs-4 text-warning"></i>
+            <div>
+                <strong>Ada {{ $tugasBaru->count() }} tugas baru!</strong><br>
+                <small class="text-muted">Klik tugas untuk melihat dan menandainya sudah dibaca.</small>
+            </div>
+        </div>
+    @endif
 
     <div class="row mt-3">
         @forelse ($tugas as $t)
             @php
+                $isNew = !$t->isReadBy(Auth::id());
                 $randomColor = $backgroundColors[array_rand($backgroundColors)];
             @endphp
             <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card border-0 shadow-sm rounded-4 h-100" style="background-color: {{ $randomColor }};">
+                <div class="card border-0 shadow-sm rounded-4 h-100 {{ $isNew ? 'border border-warning border-2' : '' }}"
+                     style="background-color: {{ $randomColor }};">
                     <div class="card-body d-flex flex-column justify-content-between">
                         <div>
+                            @if($isNew)
+                                <span class="badge bg-warning text-dark mb-2">
+                                    <i class="bi bi-star-fill me-1"></i> Baru
+                                </span>
+                            @endif
+
                             <h5 class="fw-semibold">{{ $t->judul }}</h5>
                             <p class="text-muted small">{{ $t->perintah }}</p>
                             <div class="text-danger small">
@@ -51,7 +78,8 @@
                             </div>
                         </div>
                         <div class="mt-3 text-end">
-                            <a href="{{ route('siswa.tugas.show', $t->id) }}" class="btn btn-outline-primary btn-sm rounded-pill">
+                            <a href="{{ route('siswa.tugas.show', $t->id) }}"
+                               class="btn btn-outline-primary btn-sm rounded-pill">
                                 <i class="bi bi-pencil-square me-1"></i> Kerjakan
                             </a>
                         </div>

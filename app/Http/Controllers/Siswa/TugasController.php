@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Tugas;
 use App\Models\PengumpulanTugas;
+use App\Models\Notification;
+use App\Models\User;
+use App\Models\TugasRead;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -14,6 +17,12 @@ class TugasController extends Controller
     public function show($id)
     {
         $tugas = \App\Models\Tugas::with('pengumpulan_tugas')->findOrFail($id);
+        TugasRead::firstOrCreate([
+        'tugas_id' => $tugas->id,
+        'siswa_id' => Auth::id(),
+    ], [
+        'read_at' => now(),
+    ]);
         return view('siswa.tugas_detail', compact('tugas'));
     }
 

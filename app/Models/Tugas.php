@@ -29,4 +29,14 @@ public function pengumpulan()
 {
     return $this->hasMany(\App\Models\PengumpulanTugas::class);
 }
+// app/Models/Tugas.php — tambah method ini
+public function reads()
+{
+    return $this->hasMany(TugasRead::class);
+}
+
+public function isReadBy($siswaId): bool
+{
+    return $this->reads()->where('siswa_id', $siswaId)->exists();
+}
 }

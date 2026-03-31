@@ -46,22 +46,46 @@
                             <a href="{{ route('backend.guru.edit', $item->id) }}"
                                class="btn btn-warning btn-sm">Edit</a>
 
-                            <form action="{{ route('backend.guru.destroy', $item->id) }}"
+                            {{-- Ganti form lama dengan button SweetAlert --}}
+                            <form id="delete-form-{{ $item->id }}"
+                                  action="{{ route('backend.guru.destroy', $item->id) }}"
                                   method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
-                                <button onclick="return confirm('Hapus guru?')"
-                                        class="btn btn-danger btn-sm">
-                                    Hapus
-                                </button>
                             </form>
+
+                            <button class="btn btn-danger btn-sm"
+                                    onclick="confirmHapus({{ $item->id }})">
+                                Hapus
+                            </button>
                         </td>
                     </tr>
                     @endforeach
                 </tbody>
             </table>
-
         </div>
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+function confirmHapus(id) {
+    Swal.fire({
+        title: 'Hapus Data!',
+        text: 'Apakah Anda yakin ingin menghapus guru ini?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Ya, Hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('delete-form-' + id).submit();
+        }
+    });
+}
+</script>
+@endpush

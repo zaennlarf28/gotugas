@@ -12,14 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tugas', function (Blueprint $table) {
-    $table->id();
-    $table->foreignId('kelas_id')->constrained('kelas')->cascadeOnDelete();
-    $table->string('judul');
-    $table->string('perintah');
-    $table->text('deskripsi');
-    $table->date('deadline');
-    $table->timestamps();
-});
+            $table->id();
+            $table->foreignId('kelas_id')->constrained('kelas')->cascadeOnDelete();
+            $table->string('judul');
+            $table->string('perintah');
+            $table->text('deskripsi');
+            $table->date('deadline');
+            $table->timestamps();
+        });
 
     }
 

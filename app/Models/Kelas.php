@@ -25,11 +25,21 @@ class Kelas extends Model
 
     public function siswa()
     {
-        return $this->belongsToMany(User::class, 'class_user', 'kelas_id', 'user_id');
+        return $this->belongsToMany(
+            User::class,
+            'kelas_siswa',
+            'kelas_id',
+            'siswa_id'
+        );
     }
 
     public function tugas()
     {
         return $this->hasMany(Tugas::class);
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
     }
 }

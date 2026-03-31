@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Kelas;
 use App\Models\Tugas;
+use App\Models\Notification;
+use App\Models\User;
 use App\Models\PengumpulanTugas;
 
 class TugasController extends Controller
@@ -41,6 +43,7 @@ class TugasController extends Controller
         'deskripsi' => $request->deskripsi,
         'deadline' => $request->deadline,
     ]);
+    
 
     return redirect()->route('guru.tugas.index')
         ->with('success', 'Tugas berhasil ditambahkan.');
