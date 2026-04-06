@@ -18,7 +18,9 @@ class GuruController extends Controller
             ->latest()
             ->get();
 
-        return view('backend.guru.index', compact('guru'));
+        $classes = Classes::all();
+
+        return view('backend.guru.index', compact('guru', 'classes'));
     }
 
     public function create()

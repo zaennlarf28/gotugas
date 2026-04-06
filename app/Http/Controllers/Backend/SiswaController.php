@@ -18,7 +18,9 @@ class SiswaController extends Controller
             ->latest()
             ->get();
 
-        return view('backend.siswa.index', compact('siswa'));
+            $classes = Classes::all();
+
+        return view('backend.siswa.index', compact('siswa', 'classes'));
     }
 
     public function create()

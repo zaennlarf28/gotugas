@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Guru;
 
 use App\Http\Controllers\Controller;
 use App\Models\Kelas;
+use Alert;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -15,14 +16,14 @@ class KelasController extends Controller
         $kelas = Kelas::with('mapel')
             ->where('guru_id', Auth::id())
             ->latest()
-            ->get(); // ⛔ JANGAN paginate
-            
+            ->get();
+
         return view('guru.kelas.index', compact('kelas'));
     }
 
     public function create()
     {
-        $mapels = Auth::user()->mapels; // relasi
+        $mapels = Auth::user()->mapels;
         return view('guru.kelas.create', compact('mapels'));
     }
 
@@ -33,6 +34,7 @@ class KelasController extends Controller
             'mapel_id'   => 'required|exists:mapels,id',
         ]);
 
+        // 🔥 generate kode unik
         do {
             $kode = strtoupper(Str::random(6));
         } while (Kelas::where('kode_kelas', $kode)->exists());
@@ -44,10 +46,12 @@ class KelasController extends Controller
             'guru_id'    => Auth::id(),
         ]);
 
+        // 🔥 GANTI ke SweetAlert
+        toast('Kelas berhasil dibuat', 'success');
+
         return redirect()
             ->route('guru.kelas.index')
-            ->with('success', 'Kelas berhasil dibuat')
-            ->with('kode_kelas', $kode);
+            ->with('kode_kelas', $kode); // tetap kirim kode buat ditampilkan
     }
 
     public function edit(Kelas $kelas)
@@ -72,18 +76,22 @@ class KelasController extends Controller
             'mapel_id'   => $request->mapel_id,
         ]);
 
-        return redirect()
-            ->route('guru.kelas.index')
-            ->with('success', 'Kelas berhasil diperbarui');
-            
+        // 🔥 SweetAlert
+        toast('Kelas berhasil diperbarui', 'success');
+
+        return redirect()->route('guru.kelas.index');
     }
 
     public function destroy(Kelas $kelas)
     {
         $this->authorizeGuru($kelas);
+
         $kelas->delete();
 
-        return back()->with('success', 'Kelas berhasil dihapus');
+        // 🔥 SweetAlert
+        toast('Kelas berhasil dihapus', 'success');
+
+        return redirect()->route('guru.kelas.index');
     }
 
     private function authorizeGuru(Kelas $kelas)

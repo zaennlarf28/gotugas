@@ -9,6 +9,7 @@ class Tugas extends Model
 {
     protected $fillable = [
         'kelas_id',
+        'mapel_id',
         'judul',
         'perintah',
         'deskripsi',
@@ -38,5 +39,10 @@ public function reads()
 public function isReadBy($siswaId): bool
 {
     return $this->reads()->where('siswa_id', $siswaId)->exists();
+}
+
+public function mapel()
+{
+    return $this->belongsTo(Mapel::class);
 }
 }

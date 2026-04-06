@@ -6,96 +6,154 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Kelas;
 use App\Models\Tugas;
-use App\Models\Notification;
-use App\Models\User;
 use App\Models\PengumpulanTugas;
+use Illuminate\Support\Facades\Auth;
+use Alert;
 
 class TugasController extends Controller
 {
-    // Tampilkan form tambah tugas (opsional)
-
     public function index()
     {
-        $kelas = Kelas::with('tugas')->where('guru_id', auth()->id())->get();
+        $kelas = Kelas::with(['tugas', 'mapel'])
+            ->where('guru_id', Auth::id())
+            ->get();
+
         return view('guru.tugas.index', compact('kelas'));
     }
 
     public function create(Kelas $kelas)
     {
+        if ($kelas->guru_id !== Auth::id()) {
+            abort(403);
+        }
+
         return view('guru.tugas.create', compact('kelas'));
     }
 
-    // Simpan tugas baru
     public function store(Request $request, Kelas $kelas)
-{
-    $request->validate([
-        'judul' => 'required',
-        'perintah' => 'required',
-        'deskripsi' => 'required',
-        'deadline' => 'required|date|after_or_equal:today',
-    ]);
+    {
+        if ($kelas->guru_id !== Auth::id()) {
+            abort(403);
+        }
 
-    Tugas::create([
-        'kelas_id' => $kelas->id,
-        'mapel_id' => $request->mapel_id ?? null,
-        'judul' => $request->judul,
-        'perintah' => $request->perintah,
-        'deskripsi' => $request->deskripsi,
-        'deadline' => $request->deadline,
-    ]);
-    
+        $request->validate([
+            'judul'     => 'required|max:100',
+            'perintah'  => 'required|max:200',
+            'deskripsi' => 'required|max:500',
+            'deadline'  => 'required|date|after_or_equal:today',
+        ]);
 
-    return redirect()->route('guru.tugas.index')
-        ->with('success', 'Tugas berhasil ditambahkan.');
-}
+        Tugas::create([
+            'kelas_id'  => $kelas->id,
+            'judul'     => $request->judul,
+            'perintah'  => $request->perintah,
+            'deskripsi' => $request->deskripsi,
+            'deadline'  => $request->deadline,
+        ]);
 
-    // Tampilkan form edit tugas
+        Alert::success('Berhasil', 'Tugas berhasil ditambahkan');
+
+        return redirect()->route('guru.tugas.index');
+    }
+
     public function edit($id)
-{
-    $tugas = Tugas::findOrFail($id);
-    return view('guru.tugas.edit', compact('tugas'));
-}
+    {
+        $tugas = Tugas::with('kelas')->findOrFail($id);
 
-public function update(Request $request, $id)
-{
-    $tugas = Tugas::findOrFail($id);
-    $tugas->update($request->only(['judul', 'perintah', 'deskripsi', 'deadline', 'tipe']));
-    return redirect()->route('guru.tugas.index')->with('success', 'Tugas berhasil diperbarui.');
-}
+        // 🔥 FIX UTAMA (anti null)
+        if (!$tugas->kelas || $tugas->kelas->guru_id !== Auth::id()) {
+            abort(403);
+        }
 
-public function destroy($id)
-{
-    $tugas = Tugas::findOrFail($id);
-    $tugas->delete();
-    return back()->with('success', 'Tugas berhasil dihapus.');
-}
+        return view('guru.tugas.create', compact('tugas'));
+    }
 
+    public function update(Request $request, $id)
+    {
+        $tugas = Tugas::with('kelas')->findOrFail($id);
+
+        // 🔥 FIX UTAMA
+        if (!$tugas->kelas || $tugas->kelas->guru_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $request->validate([
+            'judul'     => 'required|max:100',
+            'perintah'  => 'required|max:200',
+            'deskripsi' => 'required|max:500',
+            'deadline'  => 'required|date',
+        ]);
+
+        $tugas->update([
+            'judul'     => $request->judul,
+            'perintah'  => $request->perintah,
+            'deskripsi' => $request->deskripsi,
+            'deadline'  => $request->deadline,
+        ]);
+
+        Alert::success('Berhasil', 'Tugas berhasil diperbarui');
+
+        return redirect()->route('guru.tugas.index');
+    }
+
+    public function destroy($id)
+    {
+        $tugas = Tugas::with('kelas')->findOrFail($id);
+
+        // 🔥 FIX UTAMA
+        if (!$tugas->kelas || $tugas->kelas->guru_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $tugas->delete();
+
+        Alert::success('Berhasil', 'Tugas berhasil dihapus');
+
+        return back();
+    }
 
     public function lihatPengumpulan($tugasId)
-{
-    $tugas = Tugas::with(['pengumpulan' => function ($query)
-     {
-        $query->orderBy('created_at', 'desc'); // asc urut paling awal di atas
-     }, 'pengumpulan.siswa'
-     ])->findOrFail($tugasId);
+    {
+        $tugas = Tugas::with([
+            'kelas',
+            'pengumpulan' => function ($q) {
+                $q->latest();
+            },
+            'pengumpulan.siswa'
+        ])->findOrFail($tugasId);
 
-    return view('guru.tugas.pengumpulan', compact('tugas'));
-}
+        // 🔥 FIX UTAMA
+        if (!$tugas->kelas || $tugas->kelas->guru_id !== Auth::id()) {
+            abort(403);
+        }
 
+        return view('guru.tugas.pengumpulan', compact('tugas'));
+    }
 
-public function beriNilai(Request $request, $id)
-{
-    $request->validate([
-        'nilai' => 'required|integer|min:0|max:100'
-    ]);
+    public function beriNilai(Request $request, $id)
+    {
+        $request->validate([
+            'nilai' => 'required|integer|min:0|max:100'
+        ]);
 
-    $pengumpulan = \App\Models\PengumpulanTugas::findOrFail($id);
-    $pengumpulan->nilai = $request->nilai;
-    $pengumpulan->status = 'dinilai';
-    $pengumpulan->save();
+        $pengumpulan = PengumpulanTugas::with('tugas.kelas')->findOrFail($id);
 
-    return back()->with('success', 'Nilai berhasil diberikan.');
-}
+        // 🔥 FIX UTAMA
+        if (
+            !$pengumpulan->tugas ||
+            !$pengumpulan->tugas->kelas ||
+            $pengumpulan->tugas->kelas->guru_id !== Auth::id()
+        ) {
+            abort(403);
+        }
 
+        $pengumpulan->update([
+            'nilai' => $request->nilai,
+            'status' => 'dinilai'
+        ]);
 
+        Alert::success('Berhasil', 'Nilai berhasil diberikan');
+
+        return back();
+    }
 }
