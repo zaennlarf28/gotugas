@@ -34,6 +34,12 @@ Route::middleware('auth:sanctum')->group(function () {
     // Chat DM
     Route::get('/chat/dm/{userId}',  [ChatController::class, 'dmMessages']);
     Route::post('/chat/dm/{userId}', [ChatController::class, 'dmSend']);
+
+    // Tambah di dalam group auth:sanctum
+    Route::put('/chat/pesan/{id}',  [ChatController::class, 'editPesan']);
+    Route::delete('/chat/pesan/{id}', [ChatController::class, 'hapusPesan']);
+    Route::post('/chat/kelas/{kelasId}/balas', [ChatController::class, 'balasPesanKelas']);
+    Route::post('/chat/dm/{userId}/balas', [ChatController::class, 'balasPesanDm']);
 });
 
 

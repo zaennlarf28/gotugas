@@ -113,4 +113,91 @@ class ChatController extends Controller
             ],
         ], 201);
     }
+    // Tambah method ini di ChatController
+public function editPesan(Request $request, $id)
+{
+    $request->validate(['pesan' => 'required|string|max:1000']);
+    
+    $message = Message::findOrFail($id);
+    
+    // Hanya sender yang bisa edit
+    if ($message->sender_id !== Auth::id()) {
+        return response()->json(['message' => 'Unauthorized'], 403);
+    }
+    
+    $message->update(['pesan' => $request->pesan]);
+    
+    return response()->json([
+        'message' => 'Pesan diperbarui',
+        'data' => [
+            'id' => $message->id,
+            'pesan' => $message->pesan,
+        ]
+    ]);
+}
+
+public function hapusPesan($id)
+{
+    $message = Message::findOrFail($id);
+    
+    if ($message->sender_id !== Auth::id()) {
+        return response()->json(['message' => 'Unauthorized'], 403);
+    }
+    
+    $message->delete();
+    
+    return response()->json(['message' => 'Pesan dihapus']);
+}
+
+public function balasPesanKelas(Request $request, $kelasId)
+{
+    $request->validate([
+        'pesan'      => 'required|string|max:1000',
+        'reply_to'   => 'required|exists:messages,id',
+    ]);
+
+    Auth::user()->kelas()->where('kelas.id', $kelasId)->firstOrFail();
+
+    $replyTo = Message::findOrFail($request->reply_to);
+
+    $message = Message::create([
+        'sender_id' => Auth::id(),
+        'kelas_id'  => $kelasId,
+        'pesan'     => $request->pesan,
+        'reply_to'  => $request->reply_to,
+    ]);
+
+    return response()->json([
+        'message' => 'Pesan terkirim',
+        'data'    => [
+            'id'    => $message->id,
+            'pesan' => $message->pesan,
+            'waktu' => $message->created_at->format('H:i'),
+        ],
+    ], 201);
+}
+
+public function balasPesanDm(Request $request, $userId)
+{
+    $request->validate([
+        'pesan'    => 'required|string|max:1000',
+        'reply_to' => 'required|exists:messages,id',
+    ]);
+
+    $message = Message::create([
+        'sender_id'   => Auth::id(),
+        'receiver_id' => $userId,
+        'pesan'       => $request->pesan,
+        'reply_to'    => $request->reply_to,
+    ]);
+
+    return response()->json([
+        'message' => 'Pesan terkirim',
+        'data'    => [
+            'id'    => $message->id,
+            'pesan' => $message->pesan,
+            'waktu' => $message->created_at->format('H:i'),
+        ],
+    ], 201);
+}
 }

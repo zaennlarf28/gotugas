@@ -22,4 +22,10 @@ class Message extends Model
     {
         return $this->belongsTo(Kelas::class);
     }
+
+    // Tambah di app/Models/Message.php
+public function replyTo()
+{
+    return $this->belongsTo(Message::class, 'reply_to');
+}
 }
