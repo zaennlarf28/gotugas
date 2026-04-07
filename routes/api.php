@@ -1,4 +1,3 @@
-
 <?php
 
 use Illuminate\Support\Facades\Route;
@@ -13,14 +12,15 @@ Route::post('/login',    [AuthController::class, 'login']);
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
+
     // Auth
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me',      [AuthController::class, 'me']);
 
     // Kelas
-    Route::get('/kelas',             [KelasController::class, 'index']);
-    Route::get('/kelas/{id}',        [KelasController::class, 'show']);
-    Route::post('/kelas/join',       [KelasController::class, 'join']);
+    Route::get('/kelas',                [KelasController::class, 'index']);
+    Route::get('/kelas/{id}',           [KelasController::class, 'show']);
+    Route::post('/kelas/join',          [KelasController::class, 'join']);
     Route::delete('/kelas/{id}/keluar', [KelasController::class, 'keluar']);
 
     // Tugas
@@ -28,27 +28,18 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/tugas/{id}/kumpulkan', [TugasController::class, 'kumpulkan']);
 
     // Chat Kelas
-    Route::get('/chat/kelas/{kelasId}',  [ChatController::class, 'kelasMessages']);
-    Route::post('/chat/kelas/{kelasId}', [ChatController::class, 'kelasSend']);
+    Route::get('/chat/kelas/{kelasId}',        [ChatController::class, 'kelasMessages']);
+    Route::post('/chat/kelas/{kelasId}',       [ChatController::class, 'kelasSend']);
+    Route::get('/chat/kelas/{kelasId}/poll',   [ChatController::class, 'pollKelas']);
+    Route::post('/chat/kelas/{kelasId}/balas', [ChatController::class, 'balasPesanKelas']);
 
     // Chat DM
-    Route::get('/chat/dm/{userId}',  [ChatController::class, 'dmMessages']);
-    Route::post('/chat/dm/{userId}', [ChatController::class, 'dmSend']);
-
-    // Tambah di dalam group auth:sanctum
-    Route::put('/chat/pesan/{id}',  [ChatController::class, 'editPesan']);
-    Route::delete('/chat/pesan/{id}', [ChatController::class, 'hapusPesan']);
-    Route::post('/chat/kelas/{kelasId}/balas', [ChatController::class, 'balasPesanKelas']);
+    Route::get('/chat/dm/{userId}',        [ChatController::class, 'dmMessages']);
+    Route::post('/chat/dm/{userId}',       [ChatController::class, 'dmSend']);
+    Route::get('/chat/dm/{userId}/poll',   [ChatController::class, 'pollDm']);
     Route::post('/chat/dm/{userId}/balas', [ChatController::class, 'balasPesanDm']);
+
+    // Edit & Hapus pesan
+    Route::put('/chat/pesan/{id}',    [ChatController::class, 'editPesan']);
+    Route::delete('/chat/pesan/{id}', [ChatController::class, 'hapusPesan']);
 });
-
-
-// Sekarang test di Postman dulu. Coba hit endpoint ini:
-// ```
-// POST http://localhost/gotugas/public/api/login
-// Content-Type: application/json
-
-// {
-//     "email": "email_siswa@gmail.com",
-//     "password": "password123"
-// }

@@ -1,55 +1,146 @@
 @extends('layouts.backend')
 
+@section('styles')
+<link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.bootstrap5.css">
+<style>
+    .table-hover tbody tr:hover {
+        background-color: rgba(var(--bs-primary-rgb), 0.05);
+        transition: all 0.2s ease;
+    }
+
+    .card-stats {
+        border-left: 4px solid var(--bs-primary);
+    }
+
+    .btn-action {
+        transition: all 0.2s ease;
+    }
+
+    .btn-action:hover {
+        transform: scale(1.05);
+    }
+</style>
+@endsection
+
 @section('content')
 <div class="container-fluid">
-    <div class="card shadow-sm">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h4 class="mb-0">Data Mapel</h4>
-            <a href="{{ route('backend.mapel.create') }}" class="btn btn-sm btn-outline-primary">
-                + Tambah Mapel
-            </a>
+
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="mb-1 fw-bold">Data Mata Pelajaran</h4>
+            <p class="text-muted mb-0">Kelola semua mata pelajaran yang tersedia</p>
         </div>
+        <a href="{{ route('backend.mapel.create') }}" class="btn btn-primary d-flex align-items-center gap-2">
+            <i class="ti ti-plus"></i>
+            Tambah Mapel
+        </a>
+    </div>
 
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped" id="mapelTable">
-                    <thead>
-                        <tr>
-                            <th width="50">No</th>
-                            <th>Nama Mapel</th>
-                            <th>Kode Mapel</th>
-                            <th width="150">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($mapel as $item)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $item->nama_mapel }}</td>
-                            <td>{{ $item->kode_mapel }}</td>
-                            <td>
-                                <a href="{{ route('backend.mapel.edit', $item) }}"
-                                   class="btn btn-sm btn-warning">
-                                    Edit
-                                </a>
+    <!-- Alert Messages -->
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show d-flex align-items-center" role="alert">
+            <i class="ti ti-check fs-5 me-2"></i>
+            <div>{{ session('success') }}</div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
 
-                                <form action="{{ route('backend.mapel.destroy', $item) }}"
-                                      method="POST"
-                                      class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-sm btn-danger">
-                                        Hapus
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+    <!-- Stats Cards -->
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card card-stats border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="avatar-md bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center" style="width:56px;height:56px;">
+                                <i class="ti ti-book fs-4"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h3 class="mb-0 fw-bold">{{ $mapel->count() }}</h3>
+                            <p class="text-muted mb-0">Total Mata Pelajaran</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
+    <!-- Main Card -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+
+            @if($mapel->isEmpty())
+                <!-- Empty State -->
+                <div class="text-center py-5">
+                    <div class="mb-4">
+                        <i class="ti ti-book" style="font-size: 5rem; color: #e0e0e0;"></i>
+                    </div>
+                    <h5 class="mb-2">Belum Ada Mata Pelajaran</h5>
+                    <p class="text-muted mb-4">Mulai dengan menambahkan mata pelajaran pertama</p>
+                    <a href="{{ route('backend.mapel.create') }}" class="btn btn-primary">
+                        <i class="ti ti-plus me-1"></i> Tambah Mapel
+                    </a>
+                </div>
+            @else
+                <!-- Table -->
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle" id="mapelTable">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="text-center" width="60">No</th>
+                                <th><i class="ti ti-book me-1"></i>Nama Mapel</th>
+                                <th><i class="ti ti-tag me-1"></i>Kode Mapel</th>
+                                <th class="text-center" width="180">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($mapel as $item)
+                            <tr>
+                                <td class="text-center fw-semibold text-muted">{{ $loop->iteration }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="d-flex align-items-center justify-content-center me-2 bg-primary-subtle text-primary rounded" style="width:36px;height:36px;">
+                                            <i class="ti ti-book-2"></i>
+                                        </div>
+                                        <span class="fw-semibold">{{ $item->nama_mapel }}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <code class="bg-light px-3 py-2 rounded">{{ $item->kode_mapel }}</code>
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group" role="group">
+                                        <a href="{{ route('backend.mapel.edit', $item) }}"
+                                           class="btn btn-sm btn-warning btn-action"
+                                           title="Edit">
+                                            <i class="ti ti-edit"></i>
+                                        </a>
+                                        <form action="{{ route('backend.mapel.destroy', $item) }}"
+                                              method="POST"
+                                              class="d-inline"
+                                              onsubmit="return confirm('Yakin ingin menghapus mapel {{ $item->nama_mapel }}?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-danger btn-action"
+                                                    title="Hapus">
+                                                <i class="ti ti-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
+
+        </div>
+    </div>
+
 </div>
 @endsection
 
@@ -57,6 +148,25 @@
 <script src="https://cdn.datatables.net/2.3.2/js/dataTables.js"></script>
 <script src="https://cdn.datatables.net/2.3.2/js/dataTables.bootstrap5.js"></script>
 <script>
-    new DataTable('#mapelTable');
+    $(document).ready(function() {
+        $('#mapelTable').DataTable({
+            language: {
+                search: "Cari:",
+                lengthMenu: "Tampilkan _MENU_ data",
+                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ mata pelajaran",
+                infoEmpty: "Menampilkan 0 sampai 0 dari 0 mata pelajaran",
+                infoFiltered: "(difilter dari _MAX_ total mata pelajaran)",
+                paginate: {
+                    first: "Pertama",
+                    last: "Terakhir",
+                    next: "Selanjutnya",
+                    previous: "Sebelumnya"
+                },
+                zeroRecords: "Data tidak ditemukan"
+            },
+            pageLength: 10,
+            order: [[0, 'asc']]
+        });
+    });
 </script>
 @endpush
