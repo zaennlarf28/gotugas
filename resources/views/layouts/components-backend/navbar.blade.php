@@ -11,6 +11,15 @@
               </li>
             </ul>
 
+            <ul class="navbar-nav quick-links d-none d-lg-flex align-items-center ms-3">
+                <li class="nav-item">
+                    <span class="text-muted small">
+                        <i class="ti ti-calendar-event me-1"></i>
+                        {{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }}
+                    </span>
+                </li>
+            </ul>
+
             <ul class="navbar-nav quick-links d-none d-lg-flex align-items-center">
             </ul>
 

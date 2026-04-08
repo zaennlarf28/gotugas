@@ -659,7 +659,7 @@
       <div class="col-lg-6 order-1 order-lg-2">
         <div class="gt-hero-img-wrap">
           <div class="gt-hero-img-card">
-            <img src="{{ asset('assets/frontend/img/hero-img.png') }}"
+            <img src="{{ asset('assets/frontend/img/ikon-buku.jpg') }}"
                  class="img-fluid" alt="GoTugas Illustration">
           </div>
           {{-- Floating cards --}}
@@ -788,11 +788,6 @@
 
   </div>
 </section>
-
-{{-- Scroll Top --}}
-<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center">
-  <i class="bi bi-arrow-up-short"></i>
-</a>
 
 <div id="preloader"></div>
 

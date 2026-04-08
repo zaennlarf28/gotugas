@@ -201,7 +201,7 @@
   </a>
 
   {{-- Footer --}}
-  {{-- @include('layouts.components-frontend.footer') --}}
+  @include('layouts.components-frontend.footer')
 
   <!-- Vendor JS -->
   <script src="{{ asset('assets/frontend/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
