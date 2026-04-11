@@ -1,7 +1,7 @@
 <?php
+
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -19,6 +19,7 @@ class User extends Authenticatable
         'alamat',
         'no_telepon',
         'foto_profil',
+        'nis',          // ← tambah ini
     ];
 
     protected $hidden = [
@@ -34,14 +35,11 @@ class User extends Authenticatable
         ];
     }
 
-    // 🔽 Tempel method ini di bawah atau atas relasi-relasi seperti guru/siswa
     public function getFotoProfilUrlAttribute()
     {
         if ($this->foto_profil) {
             return asset('storage/' . $this->foto_profil);
         }
-
-        // fallback avatar otomatis
         return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=0D8ABC&color=fff';
     }
 
@@ -50,7 +48,6 @@ class User extends Authenticatable
         return ucfirst($this->role);
     }
 
-    // kelas (guru & siswa)
     public function classes()
     {
         return $this->belongsToMany(
@@ -61,7 +58,6 @@ class User extends Authenticatable
         )->withTimestamps();
     }
 
-    // mapel (khusus guru)
     public function mapels()
     {
         return $this->belongsToMany(
@@ -78,7 +74,7 @@ class User extends Authenticatable
     }
 
     public function notifications()
-{
-    return $this->hasMany(Notification::class);
-}
+    {
+        return $this->hasMany(Notification::class);
+    }
 }

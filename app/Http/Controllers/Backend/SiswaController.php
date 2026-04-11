@@ -7,7 +7,7 @@ use App\Models\User;
 use App\Models\Classes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Alert;
+use Illuminate\Support\Facades\Storage;
 
 class SiswaController extends Controller
 {
@@ -18,7 +18,7 @@ class SiswaController extends Controller
             ->latest()
             ->get();
 
-            $classes = Classes::all();
+        $classes = Classes::all();
 
         return view('backend.siswa.index', compact('siswa', 'classes'));
     }
@@ -33,24 +33,36 @@ class SiswaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'     => 'required',
-            'email'    => 'required|email|unique:users',
-            'password' => 'required|min:6',
-            'classes'  => 'required|array',
+            'name'        => 'required',
+            'email'       => 'required|email|unique:users',
+            'password'    => 'required|min:6',
+            'classes'     => 'required|array',
+            'nis'         => 'nullable|string|max:20|unique:users,nis',
+            'foto_profil' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        $siswa = User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'password' => Hash::make($request->password),
-            'role'     => 'siswa',
-        ]);
+        $data = [
+            'name'       => $request->name,
+            'email'      => $request->email,
+            'password'   => Hash::make($request->password),
+            'role'       => 'siswa',
+            'nis'        => $request->nis,
+            'alamat'     => $request->alamat,
+            'no_telepon' => $request->no_telepon,
+        ];
+
+        // Upload foto profil jika ada
+        if ($request->hasFile('foto_profil')) {
+            $data['foto_profil'] = $request->file('foto_profil')->store('foto_profil', 'public');
+        }
+
+        $siswa = User::create($data);
 
         $siswa->classes()->sync($request->classes);
 
-        toast('Siswa berhasil ditambahkan', 'success');
-
-        return redirect()->route('backend.siswa.index');
+        return redirect()
+            ->route('backend.siswa.index')
+            ->with('success', 'Siswa berhasil ditambahkan');
     }
 
     public function edit(User $siswa)
@@ -71,21 +83,42 @@ class SiswaController extends Controller
         }
 
         $request->validate([
-            'name'    => 'required',
-            'email'   => 'required|email|unique:users,email,' . $siswa->id,
-            'classes' => 'required|array',
+            'name'        => 'required',
+            'email'       => 'required|email|unique:users,email,' . $siswa->id,
+            'classes'     => 'required|array',
+            'nis'         => 'nullable|string|max:20|unique:users,nis,' . $siswa->id,
+            'foto_profil' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        $siswa->update([
-            'name'  => $request->name,
-            'email' => $request->email,
-        ]);
+        $data = [
+            'name'       => $request->name,
+            'email'      => $request->email,
+            'nis'        => $request->nis,
+            'alamat'     => $request->alamat,
+            'no_telepon' => $request->no_telepon,
+        ];
+
+        // Update password jika diisi
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->password);
+        }
+
+        // Upload foto baru jika ada
+        if ($request->hasFile('foto_profil')) {
+            // Hapus foto lama
+            if ($siswa->foto_profil) {
+                Storage::disk('public')->delete($siswa->foto_profil);
+            }
+            $data['foto_profil'] = $request->file('foto_profil')->store('foto_profil', 'public');
+        }
+
+        $siswa->update($data);
 
         $siswa->classes()->sync($request->classes);
 
-        toast('Data siswa berhasil diperbarui', 'success');
-
-        return redirect()->route('backend.siswa.index');
+        return redirect()
+            ->route('backend.siswa.index')
+            ->with('success', 'Data siswa diperbarui');
     }
 
     public function destroy(User $siswa)
@@ -94,11 +127,14 @@ class SiswaController extends Controller
             abort(404);
         }
 
+        // Hapus foto profil jika ada
+        if ($siswa->foto_profil) {
+            Storage::disk('public')->delete($siswa->foto_profil);
+        }
+
         $siswa->classes()->detach();
         $siswa->delete();
 
-        toast('Siswa berhasil dihapus', 'success');
-
-        return redirect()->route('backend.siswa.index');
+        return back()->with('success', 'Siswa berhasil dihapus');
     }
 }

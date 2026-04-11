@@ -11,6 +11,7 @@ return new class extends Migration {
             $table->string('alamat')->nullable()->after('role');
             $table->string('no_telepon')->nullable()->after('alamat');
             $table->string('foto_profil')->nullable()->after('no_telepon');
+            $table->string('nis')->nullable()->unique()->after('foto_profil');
         });
     }
 

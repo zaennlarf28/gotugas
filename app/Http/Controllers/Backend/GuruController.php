@@ -8,6 +8,7 @@ use App\Models\Classes;
 use App\Models\Mapel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class GuruController extends Controller
 {
@@ -34,19 +35,29 @@ class GuruController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'     => 'required',
-            'email'    => 'required|email|unique:users',
-            'password' => 'required|min:6',
-            'classes'  => 'required|array',
-            'mapels'   => 'required|array',
+            'name'       => 'required',
+            'email'      => 'required|email|unique:users',
+            'password'   => 'required|min:6',
+            'classes'    => 'required|array',
+            'mapels'     => 'required|array',
+            'foto_profil' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        $guru = User::create([
+        $data = [
             'name'     => $request->name,
             'email'    => $request->email,
             'password' => Hash::make($request->password),
             'role'     => 'guru',
-        ]);
+            'alamat'   => $request->alamat,
+            'no_telepon' => $request->no_telepon,
+        ];
+
+        // Upload foto profil jika ada
+        if ($request->hasFile('foto_profil')) {
+            $data['foto_profil'] = $request->file('foto_profil')->store('foto_profil', 'public');
+        }
+
+        $guru = User::create($data);
 
         $guru->classes()->sync($request->classes);
         $guru->mapels()->sync($request->mapels);
@@ -58,7 +69,6 @@ class GuruController extends Controller
 
     public function edit(User $guru)
     {
-        // 🔥 GANTI isGuru()
         if ($guru->role !== 'guru') {
             abort(404);
         }
@@ -71,22 +81,40 @@ class GuruController extends Controller
 
     public function update(Request $request, User $guru)
     {
-        // 🔥 GANTI isGuru()
         if ($guru->role !== 'guru') {
             abort(404);
         }
 
         $request->validate([
-            'name'    => 'required',
-            'email'   => 'required|email|unique:users,email,' . $guru->id,
-            'classes' => 'required|array',
-            'mapels'  => 'required|array',
+            'name'        => 'required',
+            'email'       => 'required|email|unique:users,email,' . $guru->id,
+            'classes'     => 'required|array',
+            'mapels'      => 'required|array',
+            'foto_profil' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        $guru->update([
-            'name'  => $request->name,
-            'email' => $request->email,
-        ]);
+        $data = [
+            'name'       => $request->name,
+            'email'      => $request->email,
+            'alamat'     => $request->alamat,
+            'no_telepon' => $request->no_telepon,
+        ];
+
+        // Update password jika diisi
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->password);
+        }
+
+        // Upload foto baru jika ada
+        if ($request->hasFile('foto_profil')) {
+            // Hapus foto lama
+            if ($guru->foto_profil) {
+                Storage::disk('public')->delete($guru->foto_profil);
+            }
+            $data['foto_profil'] = $request->file('foto_profil')->store('foto_profil', 'public');
+        }
+
+        $guru->update($data);
 
         $guru->classes()->sync($request->classes);
         $guru->mapels()->sync($request->mapels);
@@ -98,15 +126,17 @@ class GuruController extends Controller
 
     public function destroy(User $guru)
     {
-        // 🔥 GANTI isGuru()
         if ($guru->role !== 'guru') {
             abort(404);
         }
 
-        // 🔒 lebih aman: hapus relasi pivot dulu
+        // Hapus foto profil jika ada
+        if ($guru->foto_profil) {
+            Storage::disk('public')->delete($guru->foto_profil);
+        }
+
         $guru->classes()->detach();
         $guru->mapels()->detach();
-
         $guru->delete();
 
         return back()->with('success', 'Guru berhasil dihapus');
