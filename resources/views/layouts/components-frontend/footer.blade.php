@@ -1,17 +1,17 @@
-{{-- resources/views/layouts/components-frontend/footer.blade.php --}}
-
 <style>
   .gt-footer {
     --gt-green:      #1a6b3c;
+    --gt-green-dark: #154f2d;
+    --gt-green-mid:  #22883f;
     --gt-lime:       #4cde80;
-    --gt-lime-soft:  #d4f7e2;
-    --gt-muted:      #6b8a77;
-    --gt-border:     rgba(26,107,60,0.10);
-    --gt-text:       #12291d;
-    --gt-surface:    #f6fbf8;
-    background: #fff;
-    border-top: 1px solid var(--gt-border);
-    font-family: 'Ubuntu', sans-serif;
+    --gt-lime-soft:  rgba(76,222,128,0.15);
+    --gt-border:     rgba(255,255,255,0.08);
+    --gt-muted:      #6b9f7e;
+    --gt-text-light: #a8d5b8;
+    --gt-font-display: 'Raleway', sans-serif;
+    --gt-font-body:    'Ubuntu', sans-serif;
+    background: var(--gt-green);
+    font-family: var(--gt-font-body);
   }
 
   /* ── Top grid ── */
@@ -33,14 +33,11 @@
 
   /* ── Brand ── */
   .gt-footer-brand-name {
-    font-family: 'Raleway', sans-serif;
+    font-family: var(--gt-font-display);
     font-weight: 800;
     font-size: 1.45rem;
     letter-spacing: -0.5px;
-    background: linear-gradient(135deg, var(--gt-green) 30%, var(--gt-lime));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #fff;
     margin: 0 0 4px;
   }
   .gt-footer-brand-dot {
@@ -57,7 +54,7 @@
     50%      { transform: scale(1.4); opacity: 0.65; }
   }
   .gt-footer-tagline {
-    font-size: 0.82rem;
+    font-size: 0.85rem;
     color: var(--gt-muted);
     line-height: 1.65;
     margin: 0 0 20px;
@@ -69,33 +66,36 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 0.8rem;
-    color: var(--gt-muted);
+    font-size: 0.82rem;
+    color: var(--gt-text-light);
     text-decoration: none;
-    margin-bottom: 7px;
+    margin-bottom: 8px;
     transition: color 0.2s;
   }
-  .gt-footer-contact-item:hover { color: var(--gt-green); }
+  .gt-footer-contact-item:hover { color: #fff; }
   .gt-footer-contact-icon {
     width: 28px; height: 28px;
     border-radius: 8px;
     background: var(--gt-lime-soft);
+    border: 1px solid rgba(76,222,128,0.2);
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
-    color: var(--gt-green);
+    color: var(--gt-lime);
     font-size: 0.75rem;
     transition: background 0.2s;
   }
-  .gt-footer-contact-item:hover .gt-footer-contact-icon { background: var(--gt-lime); }
+  .gt-footer-contact-item:hover .gt-footer-contact-icon {
+    background: rgba(76,222,128,0.25);
+  }
 
   /* ── Column headings ── */
   .gt-footer-col-title {
-    font-family: 'Raleway', sans-serif;
+    font-family: var(--gt-font-display);
     font-weight: 700;
-    font-size: 0.75rem;
-    letter-spacing: 0.1em;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--gt-text);
+    color: rgba(255,255,255,0.5);
     margin: 0 0 18px;
   }
 
@@ -108,34 +108,33 @@
     gap: 10px;
   }
   .gt-footer-links a {
-    font-size: 0.85rem;
-    color: var(--gt-muted);
+    font-size: 0.875rem;
+    color: var(--gt-text-light);
     text-decoration: none;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 7px;
     transition: color 0.2s, transform 0.2s;
   }
   .gt-footer-links a::before {
     content: '';
     width: 4px; height: 4px;
     border-radius: 50%;
-    background: var(--gt-border);
+    background: rgba(76,222,128,0.3);
     flex-shrink: 0;
-    transition: background 0.2s, transform 0.2s;
+    transition: background 0.2s;
   }
   .gt-footer-links a:hover {
-    color: var(--gt-green);
+    color: #fff;
     transform: translateX(4px);
   }
   .gt-footer-links a:hover::before {
     background: var(--gt-lime);
-    transform: scale(1.5);
   }
 
   /* ── Social ── */
   .gt-footer-social-sub {
-    font-size: 0.82rem;
+    font-size: 0.83rem;
     color: var(--gt-muted);
     line-height: 1.6;
     margin: 0 0 14px;
@@ -148,17 +147,17 @@
   .gt-footer-social-link {
     width: 38px; height: 38px;
     border-radius: 10px;
-    border: 1px solid var(--gt-border);
+    border: 1px solid rgba(255,255,255,0.12);
     display: flex; align-items: center; justify-content: center;
-    color: var(--gt-muted);
+    color: var(--gt-text-light);
     text-decoration: none;
     font-size: 1rem;
     transition: all 0.22s ease;
   }
   .gt-footer-social-link:hover {
-    border-color: var(--gt-green);
+    border-color: var(--gt-lime);
     background: var(--gt-lime-soft);
-    color: var(--gt-green);
+    color: var(--gt-lime);
     transform: translateY(-2px);
   }
 
@@ -167,13 +166,13 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background: var(--gt-surface);
-    border: 1px solid var(--gt-border);
+    background: var(--gt-lime-soft);
+    border: 1px solid rgba(76,222,128,0.22);
     border-radius: 50px;
     padding: 5px 12px;
     font-size: 0.72rem;
     font-weight: 600;
-    color: var(--gt-green);
+    color: var(--gt-lime);
   }
   .gt-footer-badge-dot {
     width: 6px; height: 6px;
@@ -188,12 +187,13 @@
 
   /* ── Bottom bar ── */
   .gt-footer-bottom-wrap {
-    border-top: 1px solid var(--gt-border);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    background: var(--gt-green-dark);
   }
   .gt-footer-bottom {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px 24px;
+    padding: 18px 24px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -208,17 +208,15 @@
     align-items: center;
     gap: 6px;
   }
-  .gt-footer-copy strong { font-weight: 600; color: var(--gt-text); }
+  .gt-footer-copy strong { font-weight: 600; color: var(--gt-text-light); }
   .gt-footer-copy .sep {
     width: 3px; height: 3px;
     border-radius: 50%;
-    background: var(--gt-muted);
-    opacity: 0.45;
+    background: rgba(255,255,255,0.2);
   }
   .gt-footer-rights {
     font-size: 0.75rem;
-    color: var(--gt-muted);
-    opacity: 0.65;
+    color: rgba(255,255,255,0.25);
   }
 </style>
 
@@ -226,10 +224,12 @@
 
   <div class="gt-footer-top">
 
-    {{-- Brand & Contact ── ──────────────────────── --}}
+    {{-- Brand & Contact --}}
     <div class="gt-footer-brand">
       <a href="{{ url('/') }}" class="text-decoration-none">
-        <h2 class="gt-footer-brand-name">GoTugas<span class="gt-footer-brand-dot"></span></h2>
+        <h2 class="gt-footer-brand-name">
+          GoTugas<span class="gt-footer-brand-dot"></span>
+        </h2>
       </a>
       <p class="gt-footer-tagline">
         Platform manajemen tugas sekolah yang mudah, cepat, dan menyenangkan untuk siswa dan guru.
@@ -249,7 +249,7 @@
       </div>
     </div>
 
-    {{-- Navigasi ─────────────────────────────────── --}}
+    {{-- Navigasi --}}
     <div>
       <p class="gt-footer-col-title">Navigasi</p>
       <ul class="gt-footer-links">
@@ -261,7 +261,7 @@
       </ul>
     </div>
 
-    {{-- Platform ──────────────────────────────────── --}}
+    {{-- Platform --}}
     <div>
       <p class="gt-footer-col-title">Platform</p>
       <ul class="gt-footer-links">
@@ -270,7 +270,7 @@
       </ul>
     </div>
 
-    {{-- Sosial ───────────────────────────────────── --}}
+    {{-- Sosial --}}
     <div>
       <p class="gt-footer-col-title">Ikuti Kami</p>
       <p class="gt-footer-social-sub">
@@ -290,9 +290,9 @@
       </div>
     </div>
 
-  </div>{{-- /gt-footer-top --}}
+  </div>
 
-  {{-- Bottom bar ────────────────────────────────── --}}
+  {{-- Bottom bar --}}
   <div class="gt-footer-bottom-wrap">
     <div class="gt-footer-bottom">
       <p class="gt-footer-copy">
@@ -300,10 +300,10 @@
         <span class="sep"></span>
         Dibuat oleh <strong>Zaenal Arif</strong>
         <span class="sep"></span>
-        XI RPL 2
+        XII RPL 2
       </p>
       <span class="gt-footer-rights">GoTugas — All rights reserved</span>
     </div>
   </div>
 
-</footer>
+</footer> 

@@ -58,24 +58,29 @@ Route::group(['prefix'=>'guru', 'as' => 'guru.', 'middleware'=>['auth', Guru::cl
     Route::get('/', [GuruController::class, 'index'])->name('dashboard');
 
     // Kelas
-     Route::resource('kelas', \App\Http\Controllers\Guru\KelasController::class)
-        ->parameters([
-            'kelas' => 'kelas'
-        ]);
-    Route::resource('tugas', \App\Http\Controllers\Guru\TugasController::class);
+    Route::resource('kelas', \App\Http\Controllers\Guru\KelasController::class);
+    
     Route::resource('mapel', MapelController::class);
     Route::resource('coba', CobaController::class);
-    // Tugas
-    Route::get('kelas/{kelas}/tugas/create', [\App\Http\Controllers\Guru\TugasController::class, 'create'])->name('tugas.create');
-    Route::post('kelas/{kelas}/tugas', [\App\Http\Controllers\Guru\TugasController::class, 'store'])->name('tugas.store');
-    Route::post('/guru/kelas/{kelas}/tugas', [TugasController::class, 'store'])->name('guru.tugas.store');
-    Route::get('/guru/tugas/{tugas}/edit', [TugasController::class, 'edit'])->name('guru.tugas.edit');
-    Route::put('/guru/tugas/{tugas}', [TugasController::class, 'update'])->name('guru.tugas.update');
-    Route::delete('/guru/tugas/{tugas}', [TugasController::class, 'destroy'])->name('guru.tugas.destroy');
-    Route::put('/tugas/pengumpulan/{id}/nilai', [TugasController::class, 'beriNilai'])->name('tugas.nilai');
 
+    // ── Tugas ──
+    // Resource sudah generate: index, show, edit, update, destroy, create (default)
+    // Tapi create butuh kelas parameter, jadi kita override + tambah custom routes
+    Route::resource('tugas', \App\Http\Controllers\Guru\TugasController::class)
+        ->except(['create', 'store']); // override 2 ini secara manual
+
+    Route::get('kelas/{kelas}/tugas/create', [TugasController::class, 'create'])
+        ->name('tugas.create');
+    Route::post('kelas/{kelas}/tugas', [TugasController::class, 'store'])
+        ->name('tugas.store');
+
+    // Nilai pengumpulan
+    Route::put('tugas/pengumpulan/{id}/nilai', [TugasController::class, 'beriNilai'])
+        ->name('tugas.nilai');
+
+    // Lihat pengumpulan per tugas
     Route::get('tugas/{tugas}/pengumpulan', [TugasController::class, 'lihatPengumpulan'])
-    ->name('tugas.pengumpulan');
+        ->name('tugas.pengumpulan');
 });
 
 Route::middleware(['auth', Siswa::class])->prefix('siswa')->name('siswa.')->group(function () {
