@@ -362,7 +362,7 @@
           <!-- Logo & Brand -->
           <div class="logo-container">
             <div class="logo-wrapper">
-              <img src="{{ asset('storage/ikon-buku.jpg') }}" alt="GoTugas Logo" class="logo-image">
+              <img src="{{ asset('assets/frontend/img/ikon-buku.jpg') }}" alt="GoTugas Logo" class="logo-image">
               <h1 class="brand-title">GoTugas</h1>
             </div>
             <h2 class="welcome-text">Selamat Datang! 👋</h2>
