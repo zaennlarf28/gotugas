@@ -37,7 +37,7 @@ class SiswaController extends Controller
             'email'       => 'required|email|unique:users',
             'password'    => 'required|min:6',
             'classes'     => 'required|array',
-            'nis'         => 'nullable|string|max:20|unique:users,nis',
+            'nis'         => 'required|string|max:20|unique:users,nis',
             'foto_profil' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
@@ -86,7 +86,7 @@ class SiswaController extends Controller
             'name'        => 'required',
             'email'       => 'required|email|unique:users,email,' . $siswa->id,
             'classes'     => 'required|array',
-            'nis'         => 'nullable|string|max:20|unique:users,nis,' . $siswa->id,
+            'nis'         => 'required|string|max:20|unique:users,nis,' . $siswa->id,
             'foto_profil' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 

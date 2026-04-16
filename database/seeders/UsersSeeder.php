@@ -15,21 +15,21 @@ class UsersSeeder extends Seeder
 
         User::create([
             'name' => 'Admin',
-            'email' => 'admin@gmail.com',
+            'email' => 'admin@gotugas.qzz.io',
             'password' => bcrypt('rahasia'),
             'role' => 'admin',
         ]);
 
         User::create([
             'name' => 'Guru',
-            'email' => 'guru@gmail.com',
+            'email' => 'guru@gotugas.qzz.io',
             'password' => bcrypt('rahasia'),
             'role' => 'guru',
         ]);
 
         User::create([
             'name' => 'Siswa',
-            'email' => 'siswa@gmail.com',
+            'email' => 'siswa@gotugas.qzz.io',
             'password' => bcrypt('rahasia'),
             'role' => 'siswa',
         ]);

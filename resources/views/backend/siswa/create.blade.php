@@ -144,22 +144,18 @@
                             <div class="col-md-6 mb-4">
                                 <label class="form-label fw-semibold">
                                     <i class="ti ti-id-badge me-1"></i>NIS
-                                    <span class="text-muted fw-normal">(Opsional)</span>
+                                    <span class="text-danger">*</span>
                                 </label>
                                 <div class="icon-input">
                                     <i class="ti ti-hash input-icon"></i>
                                     <input type="text" name="nis"
                                            class="form-control form-control-lg @error('nis') is-invalid @enderror"
                                            placeholder="Nomor Induk Siswa"
-                                           value="{{ old('nis') }}">
+                                           value="{{ old('nis') }}" required>
                                 </div>
                                 @error('nis')
                                     <small class="text-danger">{{ $message }}</small>
                                 @else
-                                    <div class="nis-info">
-                                        <i class="ti ti-info-circle"></i>
-                                        NIS harus unik, biarkan kosong jika belum ada
-                                    </div>
                                 @enderror
                             </div>
 
